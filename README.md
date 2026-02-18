@@ -351,16 +351,5 @@ python -m pytest test_app.py --tb=short
 - Docker images run as non-root user
 - Regular security updates recommended
 
-## 📝 License
 
-MIT License - feel free to use for learning and demonstration purposes.
 
-## 👤 Author
-
-**Your Name**
-
-- GitHub: [@YOUR_USERNAME](https://github.com/YOUR_USERNAME)
-
----
-
-**Need help?** Check [RUNBOOK.md](RUNBOOK.md) for detailed operational procedures.
