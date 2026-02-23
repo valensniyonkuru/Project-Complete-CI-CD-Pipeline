@@ -5,7 +5,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# HTML template for the landing page
+# HTML template for the landing page with enhanced styling and dynamic content
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
