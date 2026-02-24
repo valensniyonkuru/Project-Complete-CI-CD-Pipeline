@@ -17,6 +17,8 @@ pipeline {
                 echo 'Installing Python dependencies...'
                 sh '''
                     python3 --version
+                    sudo apt-get update -y
+                    sudo apt-get install -y python3-venv python3-pip
                     python3 -m venv venv
                     . venv/bin/activate
                     pip install --upgrade pip
