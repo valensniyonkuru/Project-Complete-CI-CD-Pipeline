@@ -46,7 +46,7 @@ pipeline {
                 echo 'Building Docker image...'
                 withCredentials([
                     usernamePassword(
-                        credentialsId: 'dockerhub',
+                        credentialsId: 'Docker-hub',
                         passwordVariable: 'dockerpassword',
                         usernameVariable: 'dockeruser'
                     )
@@ -66,7 +66,7 @@ pipeline {
                 sshagent(['jenkins-ec2']) {
                     withCredentials([
                         usernamePassword(
-                            credentialsId: 'dockerhub',
+                            credentialsId: 'Docker-hub',
                             passwordVariable: 'dockerpassword',
                             usernameVariable: 'dockeruser'
                         ),
