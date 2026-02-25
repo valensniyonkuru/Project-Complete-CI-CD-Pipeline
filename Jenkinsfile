@@ -62,7 +62,7 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                echo 'Deploying to EC2 instance...'
+                echo 'Deploying to EC2 instance (eu-central-1 Frankfurt)...'
                 withCredentials([
                     sshUserPrivateKey(
                         credentialsId: 'jenkins-ec2',
@@ -77,13 +77,19 @@ pipeline {
                 ]) {
                     sh '''
                         chmod 600 $SSH_KEY
-                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$EC2_HOST bash << EOF
-                            echo "$dockerpassword" | docker login -u "$dockeruser" --password-stdin
-                            docker pull $dockeruser/jenkins-lab:latest
-                            docker stop jenkins-lab || true
-                            docker rm jenkins-lab || true
-                            docker run -d --name jenkins-lab -p 5000:5000 $dockeruser/jenkins-lab:latest
-EOF
+
+                        # Copy deploy script to EC2 instance
+                        scp -i $SSH_KEY -o StrictHostKeyChecking=no \
+                            scripts/deploy.sh ubuntu@$EC2_HOST:/home/ubuntu/deploy.sh
+
+                        # Make it executable and run it with required env vars
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$EC2_HOST \
+                            "chmod +x /home/ubuntu/deploy.sh && \
+                             DOCKER_IMAGE=$dockeruser/jenkins-lab \
+                             IMAGE_TAG=latest \
+                             DOCKER_USER=$dockeruser \
+                             DOCKER_PASS=$dockerpassword \
+                             /home/ubuntu/deploy.sh"
                     '''
                 }
             }
@@ -94,7 +100,7 @@ EOF
                 echo 'Verifying application is running...'
                 withCredentials([string(credentialsId: 'EC2_HOST', variable: 'EC2_HOST')]) {
                     script {
-                        sleep(time: 10, unit: 'SECONDS')
+                        sleep(time: 15, unit: 'SECONDS')
                         sh '''
                             curl -f http://$EC2_HOST:5000/health || exit 1
                             echo "Application is healthy!"
