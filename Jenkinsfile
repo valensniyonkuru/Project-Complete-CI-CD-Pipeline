@@ -63,25 +63,28 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 echo 'Deploying to EC2 instance...'
-                sshagent(['jenkins-ec2']) {
-                    withCredentials([
-                        usernamePassword(
-                            credentialsId: 'Docker-hub',
-                            passwordVariable: 'dockerpassword',
-                            usernameVariable: 'dockeruser'
-                        ),
-                        string(credentialsId: 'EC2_HOST', variable: 'EC2_HOST')
-                    ]) {
-                        sh '''
-                            ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST bash << EOF
-                                echo "$dockerpassword" | docker login -u "$dockeruser" --password-stdin
-                                docker pull $dockeruser/jenkins-lab:latest
-                                docker stop jenkins-lab || true
-                                docker rm jenkins-lab || true
-                                docker run -d --name jenkins-lab -p 5000:5000 $dockeruser/jenkins-lab:latest
+                withCredentials([
+                    sshUserPrivateKey(
+                        credentialsId: 'jenkins-ec2',
+                        keyFileVariable: 'SSH_KEY'
+                    ),
+                    usernamePassword(
+                        credentialsId: 'Docker-hub',
+                        passwordVariable: 'dockerpassword',
+                        usernameVariable: 'dockeruser'
+                    ),
+                    string(credentialsId: 'EC2_HOST', variable: 'EC2_HOST')
+                ]) {
+                    sh '''
+                        chmod 600 $SSH_KEY
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$EC2_HOST bash << EOF
+                            echo "$dockerpassword" | docker login -u "$dockeruser" --password-stdin
+                            docker pull $dockeruser/jenkins-lab:latest
+                            docker stop jenkins-lab || true
+                            docker rm jenkins-lab || true
+                            docker run -d --name jenkins-lab -p 5000:5000 $dockeruser/jenkins-lab:latest
 EOF
-                        '''
-                    }
+                    '''
                 }
             }
         }
