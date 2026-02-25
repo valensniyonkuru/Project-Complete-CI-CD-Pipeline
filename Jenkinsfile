@@ -51,11 +51,11 @@ pipeline {
                         usernameVariable: 'dockeruser'
                     )
                 ]) {
-                    sh """
-                        docker build -t ${dockeruser}/jenkins-lab:latest .
-                        echo ${dockerpassword} | docker login -u ${dockeruser} --password-stdin
-                        docker push ${dockeruser}/jenkins-lab:latest
-                    """
+                    sh '''
+                        docker build -t $dockeruser/jenkins-lab:latest .
+                        echo "$dockerpassword" | docker login -u "$dockeruser" --password-stdin
+                        docker push $dockeruser/jenkins-lab:latest
+                    '''
                 }
             }
         }
@@ -72,15 +72,15 @@ pipeline {
                         ),
                         string(credentialsId: 'EC2_HOST', variable: 'EC2_HOST')
                     ]) {
-                        sh """
-                            ssh -o StrictHostKeyChecking=no ubuntu@${EC2_HOST} << EOF
-                                echo ${dockerpassword} | docker login -u ${dockeruser} --password-stdin
-                                docker pull ${dockeruser}/jenkins-lab:latest
+                        sh '''
+                            ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST bash << EOF
+                                echo "$dockerpassword" | docker login -u "$dockeruser" --password-stdin
+                                docker pull $dockeruser/jenkins-lab:latest
                                 docker stop jenkins-lab || true
                                 docker rm jenkins-lab || true
-                                docker run -d --name jenkins-lab -p 5000:5000 ${dockeruser}/jenkins-lab:latest
-                            EOF
-                        """
+                                docker run -d --name jenkins-lab -p 5000:5000 $dockeruser/jenkins-lab:latest
+EOF
+                        '''
                     }
                 }
             }
@@ -92,10 +92,10 @@ pipeline {
                 withCredentials([string(credentialsId: 'EC2_HOST', variable: 'EC2_HOST')]) {
                     script {
                         sleep(time: 10, unit: 'SECONDS')
-                        sh """
-                            curl -f http://${EC2_HOST}:5000/health || exit 1
+                        sh '''
+                            curl -f http://$EC2_HOST:5000/health || exit 1
                             echo "Application is healthy!"
-                        """
+                        '''
                     }
                 }
             }
@@ -106,15 +106,15 @@ pipeline {
                 echo 'Cleaning up local Docker images...'
                 withCredentials([
                     usernamePassword(
-                        credentialsId: 'dockerhub',
+                        credentialsId: 'Docker-hub',
                         passwordVariable: 'dockerpassword',
                         usernameVariable: 'dockeruser'
                     )
                 ]) {
-                    sh """
-                        docker rmi ${dockeruser}/jenkins-lab:latest || true
+                    sh '''
+                        docker rmi $dockeruser/jenkins-lab:latest || true
                         docker image prune -f
-                    """
+                    '''
                 }
             }
         }
