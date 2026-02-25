@@ -20,7 +20,7 @@ A complete end-to-end CI/CD pipeline demonstrating automated build, test, contai
 - [Verification](#verification)
 - [Troubleshooting](#troubleshooting)
 
-## 🎯 Overview
+##  Overview
 
 This project implements a production-ready CI/CD pipeline that:
 
@@ -31,7 +31,7 @@ This project implements a production-ready CI/CD pipeline that:
 - ✅ Deploys to AWS EC2 automatically
 - ✅ Cleans up resources post-deployment
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 GitHub → Jenkins → Docker Build → Docker Hub → EC2 Deployment
@@ -48,9 +48,8 @@ GitHub → Jenkins → Docker Build → Docker Hub → EC2 Deployment
 4. **Docker Build**: Build optimized container image
 5. **Push Image**: Push to Docker Hub registry
 6. **Deploy**: SSH to EC2 and deploy container
-7. **Cleanup**: Remove old containers and images
 
-## 📦 Prerequisites
+##  Prerequisites
 
 ### Required Software
 
@@ -61,7 +60,7 @@ GitHub → Jenkins → Docker Build → Docker Hub → EC2 Deployment
 
 ### AWS Requirements
 
-- **EC2 Instance** (Amazon Linux 2 / Ubuntu)
+- **EC2 Instance** ( Ubuntu)
 - **Security Group** allowing:
   - SSH (port 22)
   - HTTP (port 5000)
@@ -73,7 +72,7 @@ GitHub → Jenkins → Docker Build → Docker Hub → EC2 Deployment
 - **Docker Hub Account** (for registry)
 - **AWS Account** (for EC2)
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Complete_CICD_Pipeline/
@@ -90,7 +89,7 @@ Complete_CICD_Pipeline/
 └── .gitignore            # Git exclusions
 ```
 
-## 💻 Local Development
+##  Local Development
 
 ### 1. Clone Repository
 
@@ -132,8 +131,6 @@ docker build -t cicd-demo-app:test .
 # Run container
 docker run -p 5000:5000 cicd-demo-app:test
 
-# Test health endpoint
-curl http://localhost:5000/health
 ```
 
 ## 🔧 Jenkins Setup
@@ -153,34 +150,6 @@ Navigate to **Manage Jenkins** → **Manage Plugins** → **Available** and inst
 
 Go to **Manage Jenkins** → **Manage Credentials** → **Global** → **Add Credentials**
 
-#### 2.1 Docker Hub Credentials
-
-- **Kind**: Username with password
-- **ID**: `registry_creds`
-- **Username**: Your Docker Hub username
-- **Password**: Your Docker Hub password/token
-
-#### 2.2 EC2 SSH Key
-
-- **Kind**: SSH Username with private key
-- **ID**: `ec2_ssh`
-- **Username**: `ec2-user` (or `ubuntu` for Ubuntu instances)
-- **Private Key**: Your EC2 private key (.pem file)
-
-#### 2.3 GitHub Credentials (Optional for private repos)
-
-- **Kind**: Username with password
-- **ID**: `git_credentials`
-- **Username**: Your GitHub username
-- **Password**: GitHub Personal Access Token
-
-### Step 3: Create Pipeline Job
-
-1. Click **New Item**
-2. Name: `CICD-Demo-Pipeline`
-3. Select **Pipeline**
-4. Click **OK**
-
 #### Configure Pipeline:
 
 - **General**:
@@ -192,20 +161,10 @@ Go to **Manage Jenkins** → **Manage Credentials** → **Global** → **Add Cre
   - **SCM**: Git
   - **Repository URL**: `https://github.com/YOUR_USERNAME/Complete_CICD_Pipeline.git`
   - **Credentials**: `git_credentials` (if private)
-  - **Branch**: `*/main` (or `*/master`)
+  - **Branch**: `*/main` 
   - **Script Path**: `Jenkinsfile`
 
-### Step 4: Update Jenkinsfile Variables
-
-Edit `Jenkinsfile` and update:
-
-```groovy
-DOCKER_IMAGE = 'YOUR_DOCKERHUB_USERNAME/cicd-demo-app'
-EC2_HOST = 'YOUR_EC2_PUBLIC_IP'
-EC2_USER = 'ec2-user'  // or 'ubuntu'
-```
-
-## 🚀 Pipeline Stages
+##  Pipeline Stages
 
 ### Stage 1: Checkout
 
@@ -242,13 +201,7 @@ Tests application health endpoint
 
 Removes local Docker images
 
-## 🌐 Deployment
-
-### Manual Trigger
-
-1. Go to Jenkins dashboard
-2. Click on your pipeline job
-3. Click **Build Now**
+##  Deployment
 
 ### Automatic Trigger (GitHub Webhook)
 
@@ -257,21 +210,6 @@ Removes local Docker images
 3. Payload URL: `http://YOUR_JENKINS_URL/github-webhook/`
 4. Content type: `application/json`
 5. Events: **Just the push event**
-
-## ✅ Verification
-
-### Check Application
-
-```bash
-# Test health endpoint
-curl http://YOUR_EC2_IP:5000/health
-
-# Test info endpoint
-curl http://YOUR_EC2_IP:5000/info
-
-# Access in browser
-http://YOUR_EC2_IP:5000
-```
 
 ### Check Docker Container on EC2
 
@@ -291,65 +229,25 @@ docker images
 docker ps -a
 ```
 
-## 🐛 Troubleshooting
-
-### Issue: Pipeline fails at Docker build
-
-**Solution**: Ensure Docker is installed on Jenkins server
-
-```bash
-sudo systemctl status docker
-sudo usermod -aG docker jenkins
-sudo systemctl restart jenkins
-```
-
-### Issue: SSH connection to EC2 fails
-
-**Solution**:
-
-- Verify security group allows SSH from Jenkins server
-- Check SSH key permissions in Jenkins credentials
-- Test manual SSH connection
-
-### Issue: Application not accessible on EC2
-
-**Solution**:
-
-- Check security group allows inbound traffic on port 5000
-- Verify container is running: `docker ps`
-- Check container logs: `docker logs cicd-demo-app`
-
-### Issue: Tests failing
-
-**Solution**:
-
-```bash
-# Run tests locally to debug
-pytest test_app.py -v
-python -m pytest test_app.py --tb=short
-```
-
-## 📸 Screenshots
+##  Screenshots
 
 ### Successful Pipeline Run
 
-![Pipeline Success](screenshots/pipeline_success.png)
+<img width="1918" height="969" alt="image" src="https://github.com/user-attachments/assets/d37716b1-3031-4421-8dfd-13ddad0cc4c5" />
+
 
 ### Application Running
 
-![Application](screenshots/app_running.png)
+<img width="1918" height="951" alt="image" src="https://github.com/user-attachments/assets/c1817218-8921-4d7f-8cd8-98822390907d" />
+
 
 ### Docker Hub Image
 
-![Docker Hub](screenshots/dockerhub_image.png)
+<img width="1918" height="778" alt="image" src="https://github.com/user-attachments/assets/a6cdd139-fcc0-455b-98f8-68575f2fb79a" />
 
-## 🔐 Security Notes
 
-- Never commit credentials to Git
-- Use Jenkins credentials store
-- EC2 security groups should be restrictive
-- Docker images run as non-root user
-- Regular security updates recommended
+
+
 
 
 
