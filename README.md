@@ -1,4 +1,4 @@
-# Complete CI/CD Pipeline with Jenkins 🚀
+# Complete CI/CD Pipeline with Jenkins 
 
 A complete end-to-end CI/CD pipeline demonstrating automated build, test, containerization, and deployment of a Flask web application using Jenkins, Docker, and AWS EC2.
 
@@ -17,8 +17,6 @@ A complete end-to-end CI/CD pipeline demonstrating automated build, test, contai
 - [Jenkins Setup](#jenkins-setup)
 - [Pipeline Stages](#pipeline-stages)
 - [Deployment](#deployment)
-- [Verification](#verification)
-- [Troubleshooting](#troubleshooting)
 
 ##  Overview
 
@@ -244,6 +242,7 @@ docker ps -a
 ### Docker Hub Image
 
 <img width="1918" height="778" alt="image" src="https://github.com/user-attachments/assets/a6cdd139-fcc0-455b-98f8-68575f2fb79a" />
+
 
 
 
