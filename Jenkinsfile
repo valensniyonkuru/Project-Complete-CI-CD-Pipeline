@@ -63,6 +63,8 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 echo 'Deploying to EC2 instance (eu-central-1 Frankfurt)...'
+
+                
                 withCredentials([
                     sshUserPrivateKey(
                         credentialsId: 'jenkins-ec2',
