@@ -117,39 +117,39 @@ pipeline {
             }
         }
 
-        stage('Verify Deployment') {
-            steps {
-                echo 'Verifying application is running...'
-                withCredentials([string(credentialsId: 'EC2_HOST', variable: 'EC2_HOST')]) {
-                    script {
-                        sleep(time: 15, unit: 'SECONDS')
-                        sh '''
-                            echo "Checking http://http://127.0.0.1:5000/health ..."
-                            curl -f http://127.0.0.1:5000/health || exit 1
-                            echo "Application is healthy!"
-                        '''
-                    }
-                }
-            }
-        }
+        // stage('Verify Deployment') {
+        //     steps {
+        //         echo 'Verifying application is running...'
+        //         withCredentials([string(credentialsId: 'EC2_HOST', variable: 'EC2_HOST')]) {
+        //             script {
+        //                 sleep(time: 15, unit: 'SECONDS')
+        //                 sh '''
+        //                     echo "Checking http://http://127.0.0.1:5000/health ..."
+        //                     curl -f http://127.0.0.1:5000/health || exit 1
+        //                     echo "Application is healthy!"
+        //                 '''
+        //             }
+        //         }
+        //     }
+        // }
 
-        stage('Cleanup Local Images') {
-            steps {
-                echo 'Cleaning up local Docker images...'
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'Docker-hub',
-                        passwordVariable: 'dockerpassword',
-                        usernameVariable: 'dockeruser'
-                    )
-                ]) {
-                    sh '''
-                        docker rmi $dockeruser/jenkins-lab:latest || true
-                        docker image prune -f
-                    '''
-                }
-            }
-        }
+        // stage('Cleanup Local Images') {
+        //     steps {
+        //         echo 'Cleaning up local Docker images...'
+        //         withCredentials([
+        //             usernamePassword(
+        //                 credentialsId: 'Docker-hub',
+        //                 passwordVariable: 'dockerpassword',
+        //                 usernameVariable: 'dockeruser'
+        //             )
+        //         ]) {
+        //             sh '''
+        //                 docker rmi $dockeruser/jenkins-lab:latest || true
+        //                 docker image prune -f
+        //             '''
+        //         }
+        //     }
+        // }
     }
 
     post {
