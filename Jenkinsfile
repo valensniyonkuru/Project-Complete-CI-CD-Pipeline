@@ -76,20 +76,40 @@ pipeline {
                     string(credentialsId: 'EC2_HOST', variable: 'EC2_HOST')
                 ]) {
                     sh '''
+                        set -xe
+
+                        echo "=== DEBUG: Checking variables ==="
+                        echo "EC2_HOST is: $EC2_HOST"
+                        echo "DOCKER_USER is: $dockeruser"
+                        echo "SSH_KEY file: $SSH_KEY"
+
+                        if [ -z "$EC2_HOST" ]; then
+                            echo "ERROR: EC2_HOST is empty! Check Jenkins credentials."
+                            exit 1
+                        fi
+
+                        echo "=== Setting up SSH key ==="
                         chmod 600 $SSH_KEY
 
-                        # Copy deploy script to EC2 instance
-                        scp -i $SSH_KEY -o StrictHostKeyChecking=no \
-                            scripts/deploy.sh ubuntu@$EC2_HOST:/home/ubuntu/deploy.sh
+                        echo "=== Testing SSH connectivity to $EC2_HOST ==="
+                        ssh -i $SSH_KEY \
+                            -o StrictHostKeyChecking=no \
+                            -o ConnectTimeout=30 \
+                            ubuntu@$EC2_HOST "echo SSH connection successful"
 
-                        # Make it executable and run it with required env vars
-                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$EC2_HOST \
-                            "chmod +x /home/ubuntu/deploy.sh && \
-                             DOCKER_IMAGE=$dockeruser/jenkins-lab \
-                             IMAGE_TAG=latest \
-                             DOCKER_USER=$dockeruser \
-                             DOCKER_PASS=$dockerpassword \
-                             /home/ubuntu/deploy.sh"
+                        echo "=== Running deployment ==="
+                        ssh -i $SSH_KEY \
+                            -o StrictHostKeyChecking=no \
+                            -o ConnectTimeout=30 \
+                            ubuntu@$EC2_HOST \
+                            "echo $dockerpassword | docker login -u $dockeruser --password-stdin \
+                            && docker pull $dockeruser/jenkins-lab:latest \
+                            && docker stop jenkins-lab || true \
+                            && docker rm jenkins-lab || true \
+                            && docker run -d --name jenkins-lab -p 5000:5000 $dockeruser/jenkins-lab:latest \
+                            && echo Deployment complete"
+
+                        echo "=== Deployment done ==="
                     '''
                 }
             }
@@ -102,6 +122,7 @@ pipeline {
                     script {
                         sleep(time: 15, unit: 'SECONDS')
                         sh '''
+                            echo "Checking http://$EC2_HOST:5000/health ..."
                             curl -f http://$EC2_HOST:5000/health || exit 1
                             echo "Application is healthy!"
                         '''
