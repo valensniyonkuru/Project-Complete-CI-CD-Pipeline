@@ -124,8 +124,8 @@ pipeline {
                     script {
                         sleep(time: 15, unit: 'SECONDS')
                         sh '''
-                            echo "Checking http://$EC2_HOST:5000/health ..."
-                            curl -f http://$EC2_HOST:5000/health || exit 1
+                            echo "Checking http://http://127.0.0.1:5000/health ..."
+                            curl -f http://127.0.0.1:5000/health || exit 1
                             echo "Application is healthy!"
                         '''
                     }
