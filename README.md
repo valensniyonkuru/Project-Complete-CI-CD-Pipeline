@@ -234,12 +234,15 @@ docker ps -a
 
 ### Application Running
 
-<img width="1918" height="951" alt="image" src="https://github.com/user-attachments/assets/c1817218-8921-4d7f-8cd8-98822390907d" />
+
+<img width="1918" height="798" alt="image" src="https://github.com/user-attachments/assets/304194fa-97d4-4406-991f-56561465b364" />
 
 
 ### Docker Hub Image
 
+
 <img width="1918" height="778" alt="image" src="https://github.com/user-attachments/assets/a6cdd139-fcc0-455b-98f8-68575f2fb79a" />
+
 
 
 
