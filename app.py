@@ -12,7 +12,7 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CI/CD Pipeline 2026!</title>
+    <title>CI/CD Pipeline 2026</title>
     <style>
         * {
             margin: 0;
