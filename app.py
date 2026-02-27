@@ -100,12 +100,7 @@ HTML_TEMPLATE = """
                 <span>{{ timestamp }}</span>
             </div>
         </div>
-        <div class="endpoints">
-            <h3>Available Endpoints:</h3>
-            <div class="endpoint">GET /</div>
-            <div class="endpoint">GET /health</div>
-            <div class="endpoint">GET /info</div>
-        </div>
+        
     </div>
 </body>
 </html>

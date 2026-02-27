@@ -79,9 +79,7 @@ Complete_CICD_Pipeline/
 ├── requirements.txt       # Python dependencies
 ├── Dockerfile             # Container definition
 ├── .dockerignore          # Docker build exclusions
-├── Jenkinsfile            # Pipeline definition
-├── scripts/
-│   └── deploy.sh         # EC2 deployment script
+├── Jenkinsfile            # Pipeline 
 ├── README.md             # This file
 ├── RUNBOOK.md            # Operational guide
 └── .gitignore            # Git exclusions
