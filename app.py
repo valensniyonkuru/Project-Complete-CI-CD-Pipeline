@@ -86,21 +86,6 @@ HTML_TEMPLATE = """
         <p style="font-size: 1.2em; margin: 20px 0;">
             Deployed successfully via Jenkins!
         </p>
-        <div class="info">
-            <div class="info-item">
-                <span class="label">Hostname:</span>
-                <span>{{ hostname }}</span>
-            </div>
-            <div class="info-item">
-                <span class="label">Version:</span>
-                <span>{{ version }}</span>
-            </div>
-            <div class="info-item">
-                <span class="label">Timestamp:</span>
-                <span>{{ timestamp }}</span>
-            </div>
-        </div>
-        
     </div>
 </body>
 </html>
