@@ -81,7 +81,7 @@ HTML_TEMPLATE = """
 </head>
 <body>
     <div class="container">
-        <h1>🚀 CI/CD Pipeline Demo</h1>
+        <h1> CI/CD Pipeline Demo</h1>
         <div class="emoji">✅</div>
         <p style="font-size: 1.2em; margin: 20px 0;">
             Deployed successfully via Jenkins!
